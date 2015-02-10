@@ -1,8 +1,8 @@
 import model
 import csv
+from datetime import datetime
 
 def load_users(session):
-    # use u.user: 1|24|M|technician|85711
     src_file = open("seed_data/u.user")
 
     for line in src_file:
@@ -14,13 +14,37 @@ def load_users(session):
         # add new instance to session
         session.add(new_user)
 
-    #commit
     session.commit()
 
 
 def load_movies(session):
-    # use u.item
-    pass
+    with open("seed_data/u.item", 'rb') as src_file:
+        reader = csv.reader(src_file, delimiter="|")
+        
+        for row in reader:
+            id = row[0]
+            name_str = row[1]
+
+            # decodes latin-1 back into unicode
+            name_str = name_str.decode("latin-1")
+
+            # only add movies with title and associated info to db
+            if name_str != "unknown":
+                # remove year from movie name title
+                name = name_str[0:-7]
+                str_released_at = row[2]
+
+                # change string to datetime object
+                released_at = datetime.strptime(str_released_at, "%d-%b-%Y")
+                imdb_url = row[4] 
+
+                #instantiate movie object
+                movie = model.Movie(name = name, released_at = released_at, imdb_url=imdb_url)
+                movie.id = id
+    
+                session.add(movie)
+
+        session.commit()
 
 def load_ratings(session):
     # use u.data
@@ -29,6 +53,9 @@ def load_ratings(session):
 def main(session):
     # You'll call each of the load_* functions with the session as an argument
     load_users(session)
+    load_movies(session)
+
+
 
 if __name__ == "__main__":
     s = model.connect()
