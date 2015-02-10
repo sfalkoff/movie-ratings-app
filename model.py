@@ -8,7 +8,7 @@ Session = None
 
 Base = declarative_base()
 
-### Class declarations go here
+#TODO: write appropriate __repr__ functions for each class
 
 class User(Base):
     __tablename__= "users"
@@ -24,6 +24,8 @@ class Movie(Base):
     name = Column(String(100), nullable = False)
     released_at = Column(DateTime, nullable = True)
     imdb_url = Column(String(400), nullable = True)
+    #This last column has string release years, may want to change into datetime later, may not even need
+    release_year = Column(String(4), nullable = True)
 
 class Rating(Base):
     __tablename__ = "ratings"

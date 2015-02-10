@@ -36,10 +36,11 @@ def load_movies(session):
 
                 # change string to datetime object
                 released_at = datetime.strptime(str_released_at, "%d-%b-%Y")
+                release_year = released_at.strftime("%Y")
                 imdb_url = row[4] 
 
                 #instantiate movie object
-                movie = model.Movie(name = name, released_at = released_at, imdb_url=imdb_url)
+                movie = model.Movie(name = name, released_at = released_at, imdb_url=imdb_url, release_year = release_year)
                 movie.id = id
     
                 session.add(movie)
