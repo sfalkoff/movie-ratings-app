@@ -28,10 +28,10 @@ class Movie(Base):
     released_at = Column(DateTime, nullable = True)
     imdb_url = Column(String(400), nullable = True)
     #This last column has string release years, may want to change into datetime later, may not even need
-    release_year = Column(String(4), nullable = True)
+    release_year = Column(Integer, nullable = True)
 
     def __repr__(self):
-        return "<Movie: id=%r name=%s release_year=%s>" % (self.id, self.name, self.release_year)
+        return "<Movie: id=%r name=%s release_year=%d>" % (self.id, self.name, self.release_year)
 
 
 class Rating(Base):

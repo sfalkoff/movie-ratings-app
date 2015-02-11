@@ -37,6 +37,7 @@ def load_movies(session):
                 # change string to datetime object
                 released_at = datetime.strptime(str_released_at, "%d-%b-%Y")
                 release_year = released_at.strftime("%Y")
+                release_year = int(release_year)
                 imdb_url = row[4] 
 
                 #instantiate movie object
