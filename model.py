@@ -1,7 +1,7 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, relationship, backref
 
 ENGINE = None
 Session = None
@@ -18,6 +18,9 @@ class User(Base):
     age = Column(Integer, nullable = True)
     zipcode = Column(String(15), nullable = True)
 
+    def __repr__(self):
+        return "<User: id=%r email=%s pass=%s age=%d zip=%s>" % (self.id, self.email, self.password, self.age, self.zipcode)
+
 class Movie(Base):
     __tablename__="movies"
     id = Column(Integer, primary_key = True)
@@ -27,6 +30,10 @@ class Movie(Base):
     #This last column has string release years, may want to change into datetime later, may not even need
     release_year = Column(String(4), nullable = True)
 
+    def __repr__(self):
+        return "<Movie: id=%r name=%s release_year=%s>" % (self.id, self.name, self.release_year)
+
+
 class Rating(Base):
     __tablename__ = "ratings"
     id = Column(Integer, primary_key = True)
@@ -34,6 +41,12 @@ class Rating(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     rating = Column(Integer, nullable = True)
 
+    movie = relationship('Movie', backref=backref('ratings', order_by=id))
+
+    user = relationship("User", backref=backref('ratings', order_by=id))
+
+    def __repr__(self):
+        return "<Rating: id=%r movie_id=%d user_id=%d rating=%d>" % (self.id, self.movie_id, self.user_id, self.rating)
 
 def connect():
     global ENGINE
@@ -49,6 +62,7 @@ def connect():
 def main():
     """In case we need this for something"""
     pass
+
 
 if __name__ == "__main__":
     main()
