@@ -68,5 +68,6 @@ def main(session):
 
 
 if __name__ == "__main__":
+    #Q: Do we need to update this connect() call since we removed it from model.py?
     s = model.connect()
     main(s)
