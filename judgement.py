@@ -20,15 +20,16 @@ def process_login():
     password = request.form['password']    
 
     user = model.User.query.filter(model.User.email==email).first()
-
-    #display name, give log out option, flash success msg, redirect to melons   
+ 
     if user != None:
         if user.email == email and user.password == password:
             flask_session['email'] = email
             flash("Hello! Login successful.")
+            print flask_session
             return redirect("/")
         else:
             flash("Incorrect password! Try again.")
+            print flask_session
             return redirect("/login")
 
     else: 

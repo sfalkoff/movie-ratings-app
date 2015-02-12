@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block body %}
+
+    Please fill out the boxes below to create a new user account with us:<br>
+    <form action="/signup" method="POST">
+        <!-- FIXME: Validate form so only valid emails, resonable integers for age, 5 digits for zip are acceptable otherwise null -->
+        <label for="email">Email address:</label><input type="text" name="email" id="email"><br>
+        <label for="password">Password:</label><input type="password" name="password" id="password"><br> 
+        <label for="age">Age:</label><input type="number" name="age" id="age"><br>
+        <label for="zipcode">Zip code:</label><input type="text" name="zipcode" id="zipcode"><br> 
+        <input type="submit">
+    </form>    
+
+{% endblock %}
