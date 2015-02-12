@@ -1,11 +1,14 @@
-<!DOCTYPE html>
+{% extends 'base.html' %}
+{% block body %}
 
-<html>
-<head>
-</head>
-<body>
+    LINKS:
+    <a href="/signup">SIGN-UP</a>
+     <a href="/login">LOG IN</a>
+
+
 {% for user in users %}
 <h2>User {{ user.id }}, age {{ user.age }} has {{ user.ratings|length }} ratings</h2>
 {% endfor %}
-</body>
-</html>
+
+
+{% endblock %}
