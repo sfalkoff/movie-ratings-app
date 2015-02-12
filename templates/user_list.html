@@ -1,13 +1,8 @@
 {% extends 'base.html' %}
 {% block body %}
 
-    LINKS:
-    <a href="/signup">SIGN-UP</a>
-     <a href="/login">LOG IN</a>
-
-
 {% for user in users %}
-<h2>User {{ user.id }}, age {{ user.age }} has {{ user.ratings|length }} ratings</h2>
+<h2><a href="/ratings/{{user.id}}">User {{ user.id }}</a>, age {{ user.age }} has {{ user.ratings|length }} ratings</h2>
 {% endfor %}
 
 

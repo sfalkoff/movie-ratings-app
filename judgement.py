@@ -7,8 +7,29 @@ app.secret_key = '\xf5!\x07!qj\xa4\x08\xc6\xf8\n\x8a\x95m\xe2\x04g\xbb\x98|U\xa2
 
 @app.route("/")
 def index():
+    return render_template("base.html")
+
+@app.route("/users")
+def userlist():
     user_list = model.User.query.limit(5).all()
     return render_template("user_list.html", users = user_list)
+
+@app.route("/ratings/<int:id>")
+def ratings(id):
+    #database query for user's ratings
+    user = model.User.query.get(id)
+    user_ratings = user.ratings
+    ur_dict = {}
+
+    #make for loop iterate over list of movie id's in user_ratings
+    for item in range(len(user_ratings)):
+        title = user_ratings[item].movie.name
+        ur_dict[title] = user_ratings[item].rating
+        print user_ratings[item].movie
+        
+    # pass dict to jinja to do own forloop to make a list
+    print ur_dict
+    return render_template("user_ratings.html", ur_dict = ur_dict)
 
 @app.route("/login", methods =["GET"])
 def login():

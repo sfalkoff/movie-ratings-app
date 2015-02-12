@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<br>
+<br>
+Ratings by this user:
+
+{% for movie, rating in ur_dict.items() %}
+<ul>
+    <li> Movie Name: {{movie}}, Rating: {{rating}} </li>
+</ul>
+
+{% endfor %}
+
+
+{% endblock %}
