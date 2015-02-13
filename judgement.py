@@ -1,9 +1,16 @@
-from flask import Flask, render_template, redirect, request, flash
+from flask import Flask, g, render_template, redirect, request, flash
 from flask import session as flask_session
 import model
 
 app = Flask(__name__)
 app.secret_key = '\xf5!\x07!qj\xa4\x08\xc6\xf8\n\x8a\x95m\xe2\x04g\xbb\x98|U\xa2f\x03'
+
+@app.before_request
+def before_request():
+    if 'email' in flask_session:
+        g.user = flask_session['email']
+    else:
+        g.user = 'and welcome!'
 
 @app.route("/")
 def index():
@@ -13,6 +20,27 @@ def index():
 def userlist():
     user_list = model.User.query.limit(5).all()
     return render_template("user_list.html", users = user_list)
+
+@app.route("/movies/<int:id>")
+def movie_details(id):
+    #database query for user's ratings
+    movie = model.Movie.query.get(id)
+    movie.name, movie.release_year, movie.imdb_url
+
+    # IF has rating, show rating, allow edits
+    if 'email' in flask_session:
+        user = model.User.query.filter_by(email =flask_session['email']).one()
+        user_id = user.id
+        my_rating = model.Rating.query.filter(model.Rating.movie_id == id, model.Rating.user_id == user_id).first()
+        print my_rating
+        print my_rating.rating
+        # if my_rating != None:
+        #     #let me edit my rating
+        # else:
+        #     #let me create a rating
+
+    return render_template("movie_ratings.html", name = movie.name, year = movie.release_year, imdb = movie.imdb_url)
+
 
 @app.route("/ratings/<int:id>")
 def ratings(id):
@@ -25,11 +53,13 @@ def ratings(id):
     for item in range(len(user_ratings)):
         title = user_ratings[item].movie.name
         ur_dict[title] = user_ratings[item].rating
-        print user_ratings[item].movie
-        
-    # pass dict to jinja to do own forloop to make a list
-    print ur_dict
+
     return render_template("user_ratings.html", ur_dict = ur_dict)
+
+@app.route("/movies")
+def movie_list():
+    movie_list = model.Movie.query.limit(5).all()
+    return render_template("movie_list.html", movie_list = movie_list)
 
 @app.route("/login", methods =["GET"])
 def login():
@@ -57,7 +87,11 @@ def process_login():
         flash("You aren't in our database, want to sign up?")
         return redirect("/signup")
 
-
+@app.route("/logout", methods=["GET"])
+def log_out():
+    flask_session.clear()
+    flash("You are successfully logged out!")
+    return redirect("/")
 
 
 @app.route("/signup", methods=["GET"])

@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block body %}
+
+{% for movie in movie_list %}
+<h2>Movie Title: <a href="/movies/{{movie.id}}">{{ movie.name }}</a> has {{ movie.ratings|length }} ratings</h2>
+{% endfor %}
+
+
+{% endblock %}

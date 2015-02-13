@@ -5,7 +5,8 @@
        
     </head>
     <body>
-        <h3>Our Ratings App!</h3><br>
+        <h3>Our Ratings App!</h3>
+            Hello {{g.user}}<br><br>
             {% with messages = get_flashed_messages() %}
             {% if messages %}
             {% for message in messages %}
@@ -20,6 +21,9 @@
         <a href="/signup">SIGN-UP</a>
         <a href="/login">LOG IN</a>
         <a href="/users">USER LIST</a>
+        <a href="/movies"> MOVIE LIST</a>
+        <a href="/logout" display="hidden"> LOG OUT </a>
+
 
             {% block body %}{% endblock %}
         
