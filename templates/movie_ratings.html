@@ -10,11 +10,14 @@ Movie Details:
     <li> IMDB: <a href={{imdb}}> CLICK HERE </a> </li>
 </ul>
 
-Your Rating 
+Rate this movie by entering a value from 1-5 in the box below!<br>
 
-<!-- IF has rating, show rating, allow edits
-
-ELSE option to enter rating to db for this movie -->
+<form action="/movies/{{id}}", method="GET">
+ <label for="rating">My Rating*:</label><input type="number" name="rating" id="rating" value={{my_rating}}>
+ <button type="submit">Submit</button>
+</form>
+*If you've already rated the movie, your previous rating is shown above.<br> 
+You can change this rating and then click submit to update your rating. <br>
 
 
 {% endblock %}

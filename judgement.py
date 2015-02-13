@@ -24,22 +24,45 @@ def userlist():
 @app.route("/movies/<int:id>")
 def movie_details(id):
     #database query for user's ratings
+    new_rating = request.args.get("rating")
     movie = model.Movie.query.get(id)
     movie.name, movie.release_year, movie.imdb_url
 
-    # IF has rating, show rating, allow edits
+    #TODO - tidy this section up, probably redundant now
+    
+    # if user is logged in (i.e. in our db)
     if 'email' in flask_session:
         user = model.User.query.filter_by(email =flask_session['email']).one()
         user_id = user.id
-        my_rating = model.Rating.query.filter(model.Rating.movie_id == id, model.Rating.user_id == user_id).first()
-        print my_rating
-        print my_rating.rating
-        # if my_rating != None:
-        #     #let me edit my rating
-        # else:
-        #     #let me create a rating
+        my_rating_obj = model.Rating.query.filter(model.Rating.movie_id == id, model.Rating.user_id == user_id).first()
 
-    return render_template("movie_ratings.html", name = movie.name, year = movie.release_year, imdb = movie.imdb_url)
+        #show me my current rating
+        if my_rating_obj != None:
+            my_rating = my_rating_obj.rating
+             #let me edit my rating (changing the db value)
+            if new_rating != None:
+                my_rating_obj.rating = new_rating
+                model.session.commit()
+                my_rating = new_rating
+          
+        #let me create a rating 
+        elif new_rating != None:
+            new_rating = int(new_rating)
+            new_rating_obj = model.Rating(movie_id=id, user_id=user_id, rating=new_rating)
+            model.session.add(new_rating_obj)
+            model.session.commit()
+
+        #for users with no previous rating who don't rate the movie
+        else:
+            my_rating = ""
+            #FIXME: add an eventlistener to address potential error for when user submits an empty form (prevent default, show message) 
+
+    #for users not in db / not logged in
+    else:
+        my_rating = ""
+        #FIXME: add an eventlistener to address potential error for when user submits an empty form (prevent default, show message)
+
+    return render_template("movie_ratings.html", id = id, name = movie.name, year = movie.release_year, imdb = movie.imdb_url, my_rating = my_rating)
 
 
 @app.route("/ratings/<int:id>")
